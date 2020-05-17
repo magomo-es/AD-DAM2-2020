@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="hotelesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="cadenas">
+    <Key>
+      <PropertyRef Name="cif" />
+    </Key>
+    <Property Name="cif" Type="String" MaxLength="9" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="dir_fis" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="hoteles" Relationship="Self.fk_hoteles_cadenas" FromRole="cadenas" ToRole="hoteles" />
+  </EntityType>
+  <EntityType Name="ciudades">
+    <Key>
+      <PropertyRef Name="id_ciudad" />
+    </Key>
+    <Property Name="id_ciudad" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="hoteles" Relationship="Self.fk_hoteles_ciudades" FromRole="ciudades" ToRole="hoteles" />
+  </EntityType>
+  <EntityType Name="hoteles">
+    <Key>
+      <PropertyRef Name="id_ciudad" />
+      <PropertyRef Name="nombre" />
+    </Key>
+    <Property Name="id_ciudad" Type="Int32" Nullable="false" />
+    <Property Name="nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="categoria" Type="Int32" Nullable="false" />
+    <Property Name="direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="telefono" Type="Int32" Nullable="false" />
+    <Property Name="tipo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="cif" Type="String" MaxLength="9" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="cadenas" Relationship="Self.fk_hoteles_cadenas" FromRole="hoteles" ToRole="cadenas" />
+    <NavigationProperty Name="ciudades" Relationship="Self.fk_hoteles_ciudades" FromRole="hoteles" ToRole="ciudades" />
+  </EntityType>
+  <Association Name="fk_hoteles_cadenas">
+    <End Role="cadenas" Type="Self.cadenas" Multiplicity="1" />
+    <End Role="hoteles" Type="Self.hoteles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="cadenas">
+        <PropertyRef Name="cif" />
+      </Principal>
+      <Dependent Role="hoteles">
+        <PropertyRef Name="cif" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_hoteles_ciudades">
+    <End Role="ciudades" Type="Self.ciudades" Multiplicity="1" />
+    <End Role="hoteles" Type="Self.hoteles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ciudades">
+        <PropertyRef Name="id_ciudad" />
+      </Principal>
+      <Dependent Role="hoteles">
+        <PropertyRef Name="id_ciudad" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="hotelesEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="cadenas" EntityType="Self.cadenas" />
+    <EntitySet Name="ciudades" EntityType="Self.ciudades" />
+    <EntitySet Name="hoteles" EntityType="Self.hoteles" />
+    <AssociationSet Name="fk_hoteles_cadenas" Association="Self.fk_hoteles_cadenas">
+      <End Role="cadenas" EntitySet="cadenas" />
+      <End Role="hoteles" EntitySet="hoteles" />
+    </AssociationSet>
+    <AssociationSet Name="fk_hoteles_ciudades" Association="Self.fk_hoteles_ciudades">
+      <End Role="ciudades" EntitySet="ciudades" />
+      <End Role="hoteles" EntitySet="hoteles" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
